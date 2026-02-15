@@ -189,6 +189,43 @@
     .result-preview .preview-wrap { max-height: 70vh; }
     .result-download { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
     .name-section label { font-size: 1rem; color: #FFFFFF; }
+    .save-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    .save-modal.visible { display: flex; flex-direction: column; }
+    .save-modal .modal-img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: 8px;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .save-modal .modal-msg {
+      color: #fff;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .save-modal .modal-close {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: #2EA1A1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      cursor: pointer;
+    }
     .site-footer {
       max-width: 900px;
       margin: 2.5rem auto 0;
@@ -203,7 +240,7 @@
       width: 100%;
       max-width: 584px;
       aspect-ratio: 16/9;
-      background: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.55);
       border-radius: 16px;
       overflow: hidden;
       padding: 0.75rem 1rem;
@@ -268,6 +305,12 @@
     <button type="button" class="download-btn result-download" id="downloadBtn">تحميل الصورة</button>
   </div>
 
+  <div id="saveModal" class="save-modal" aria-hidden="true">
+    <img id="saveModalImg" class="modal-img" alt="الصورة للحفظ">
+    <p class="modal-msg" id="saveModalMsg">اضغط مطولاً على الصورة ثم اختر «حفظ الصورة»<br>أو انقر بالزر الأيمن واختر حفظ الصورة</p>
+    <button type="button" class="modal-close" id="saveModalClose">إغلاق</button>
+  </div>
+
   <footer class="site-footer">
     <div class="logo-wrap">
       <img src="./logo1.png" alt="الشعار" class="site-logo" id="siteLogo" crossorigin="anonymous">
@@ -279,9 +322,26 @@
       document.getElementById('fileProtocolWarning').style.display = 'block';
     }
 
-    function isSafariMobile() {
+    function isSafari() {
       const ua = navigator.userAgent || '';
-      return /iPhone|iPad|iPod/.test(ua) || (navigator.maxTouchPoints > 0 && /Safari/.test(ua) && !/Chrome/.test(ua));
+      if (/iPhone|iPad|iPod/.test(ua)) return true;
+      if (/Safari/.test(ua) && !/Chrome|Chromium|FxiOS/.test(ua)) return true;
+      return false;
+    }
+    function showSaveModal(blobUrl) {
+      const modal = document.getElementById('saveModal');
+      const img = document.getElementById('saveModalImg');
+      const closeBtn = document.getElementById('saveModalClose');
+      if (!modal || !img) return;
+      img.src = blobUrl;
+      modal.classList.add('visible');
+      modal.setAttribute('aria-hidden', 'false');
+      closeBtn.onclick = function() {
+        modal.classList.remove('visible');
+        modal.setAttribute('aria-hidden', 'true');
+        img.src = '';
+        URL.revokeObjectURL(blobUrl);
+      };
     }
 
     // ——— موضع وحجم ولون الاسم (ثابت) ———
@@ -397,9 +457,8 @@
         const url = URL.createObjectURL(blob);
         const fileName = 'ramadan-' + selectedDesign + (name ? '-' + name : '') + '.png';
 
-        if (isSafariMobile()) {
-          window.open(url, '_blank');
-          alert('افتحت الصورة في نافذة جديدة.\nاضغط مطولاً على الصورة ثم اختر «حفظ الصورة» لحفظها في الجهاز.');
+        if (isSafari()) {
+          showSaveModal(url);
         } else {
           const a = document.createElement('a');
           a.href = url;
