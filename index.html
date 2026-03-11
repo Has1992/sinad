@@ -226,6 +226,18 @@
     }
     .result-preview .preview-wrap { max-height: 70vh; }
     .result-download { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
+    .save-instructions {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.95);
+    }
+    .save-instructions strong { display: block; margin-bottom: 0.5rem; color: #fff; }
+    .save-instructions ul { margin: 0; padding-right: 1.25rem; }
+    .save-instructions li { margin-bottom: 0.4rem; }
     .name-section label { font-size: 1rem; color: #1f567d; }
     .site-footer {
       max-width: 900px;
@@ -310,6 +322,13 @@
       <input type="text" id="userName" placeholder="اسمك هنا" maxlength="50">
     </div>
     <button type="button" class="download-btn result-download" id="downloadBtn">تحميل الصورة</button>
+    <div class="save-instructions" id="saveInstructions">
+      <strong>كيفية حفظ الصورة</strong>
+      <ul>
+        <li><strong>كمبيوتر أو أندرويد:</strong> اضغط «تحميل الصورة» فستُحفظ تلقائياً في مجلد التحميلات.</li>
+        <li><strong>آيفون أو آيباد:</strong> اضغط «تحميل الصورة» → ستُفتح الصورة في نافذة جديدة → اضغط مطولاً على الصورة → اختر «حفظ الصورة» أو «Save Image».</li>
+      </ul>
+    </div>
   </div>
 
   <footer class="site-footer">
@@ -349,7 +368,7 @@
       setTimeout(function() {
         if (i1 && i1.naturalWidth === 0) onErr(i1, i1.closest('.thumb-wrap'));
         if (i2 && i2.naturalWidth === 0) onErr(i2, i2.closest('.thumb-wrap'));
-      }, 1500);
+      }, 800);
     });
 
     // EAD – ملف صوتي: يعمل تلقائياً بأول لمسة/نقرة (آيفون وأندرويد)
@@ -391,18 +410,7 @@
     const resultOverlay = document.getElementById('resultOverlay');
     const userNameInput = document.getElementById('userName');
     const downloadBtn = document.getElementById('downloadBtn');
-    const logoImg = document.getElementById('siteLogo');
-
     let selectedDesign = 0;
-
-    function loadLogoForCanvas() {
-      return new Promise((resolve) => {
-        if (!logoImg || !logoImg.src) { resolve(null); return; }
-        if (logoImg.complete && logoImg.naturalWidth > 0) { resolve(logoImg); return; }
-        logoImg.onload = () => resolve(logoImg);
-        logoImg.onerror = () => resolve(null);
-      });
-    }
 
     function applyResultOverlay() {
       if (selectedDesign < 1) return;
@@ -488,8 +496,40 @@
         const fileName = 'ramadan-' + designId + (name ? '-' + name : '') + '.png';
 
         if (isSafariMobile()) {
-          window.open(url, '_blank');
-          alert('افتحت الصورة في نافذة جديدة.\nاضغط مطولاً على الصورة ثم اختر «حفظ الصورة» لحفظها في الجهاز.');
+          const win = window.open('', '_blank');
+          if (win && win.document) {
+            const escapedUrl = url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+            const escapedName = (name || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            win.document.write(
+              '<!DOCTYPE html>' +
+              '<html lang="ar" dir="rtl">' +
+              '<head>' +
+              '<meta charset="utf-8">' +
+              '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+              '<title>حفظ البطاقة</title>' +
+              '<style>' +
+              'body{margin:0;padding:1rem;font-family:\"Noto Naskh Arabic\",system-ui,sans-serif;background:#111;color:#fff;text-align:center;}' +
+              'img{max-width:100%;height:auto;display:block;margin:0 auto 1rem;border-radius:12px;}' +
+              '.box{max-width:540px;margin:0 auto;text-align:center;}' +
+              '.tips{font-size:0.95rem;line-height:1.7;background:#222;border-radius:12px;padding:0.75rem 1rem;}' +
+              '.tips strong{display:block;margin-bottom:0.35rem;}' +
+              '</style>' +
+              '</head><body>' +
+              '<div class="box">' +
+              '<img src="' + escapedUrl + '" alt="البطاقة">' +
+              '<div class="tips">' +
+              '<strong>كيفية حفظ الصورة</strong>' +
+              '<div>اضغط مطولاً على الصورة ثم اختر «حفظ الصورة» أو «Save Image».</div>' +
+              (escapedName ? '<div style="margin-top:0.35rem;opacity:0.85;">الاسم المكتوب على البطاقة: ' + escapedName + '</div>' : '') +
+              '</div>' +
+              '</div>' +
+              '</body></html>'
+            );
+            win.document.close();
+          } else {
+            // fallback
+            window.open(url, '_blank');
+          }
         } else {
           const a = document.createElement('a');
           a.href = url;
