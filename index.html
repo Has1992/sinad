@@ -3,41 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <script>
-    if (location.protocol === 'http:' && (location.hostname.endsWith('github.io') || location.hostname !== 'localhost' && location.hostname !== '127.0.0.1')) {
-      location.replace('https:' + location.href.substring(5));
-    }
-  </script>
-  <title>رمضان سناد</title>
+  <title>بطاقات رمضان — اكتب اسمك وحمّل التصميم</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     @font-face {
-      font-family: 'Symbio';
-      src: local('Symbio'), local('Symbio AR+LT'), url('fonts/Symbio.woff2') format('woff2'), url('fonts/Symbio.woff') format('woff');
+      font-family: 'Symbio AR+LT';
+      src: local('Symbio AR+LT'), local('Symbio'), url('fonts/Symbio.woff2') format('woff2'), url('fonts/Symbio.woff') format('woff');
       font-weight: 400 700;
       font-display: swap;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: "Noto Naskh Arabic", serif;
-      background: #1a4d5c;
-      background-image: url('4.png');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
+      background: #22577b;
+      background-color: #1a4d5c;
+      background-image: linear-gradient(165deg, #22577b 0%, #1e4a5f 28%, #2EA1A1 52%, #248f8f 78%, #6CBE99 100%);
+      background-size: 100% 100%;
       min-height: 100vh;
       color: #FFFFFF;
       padding: 2rem 1rem 1rem;
       position: relative;
     }
+    @media (min-width: 769px) {
+      body {
+        background-image:
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='0.6'%3E%3Cpath d='M50 0v50M50 50v50M0 50h50M50 50h50'/%3E%3Cpath d='M25 25l25 25-25 25-25-25z'/%3E%3Cpath d='M75 25L50 50l25 25 25-25z'/%3E%3Cpath d='M75 75L50 50l-25 25 25 25z'/%3E%3Cpath d='M25 75L50 50 25 25 0 50z'/%3E%3Ccircle cx='50' cy='50' r='8'/%3E%3C/g%3E%3C/svg%3E"),
+          linear-gradient(165deg, #22577b 0%, #1e4a5f 28%, #2EA1A1 52%, #248f8f 78%, #6CBE99 100%);
+        background-size: 100px 100px, 100% 100%;
+      }
+    }
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.2) 100%);
+      background: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(46,161,161,0.2) 0%, transparent 50%),
+                  radial-gradient(ellipse 80% 60% at 80% 100%, rgba(108,190,153,0.15) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* EAD4 – طبقة خلفية إضافية فقط */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('EAD4.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.25;
       pointer-events: none;
       z-index: 0;
     }
@@ -47,28 +62,21 @@
       margin-bottom: 1.5rem;
     }
     .header .site-logo { display: none; }
-    h1 {
-      font-size: 1.75rem;
+    .header-title-img {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      max-height: 140px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    .header h1 {
+      font-size: 1.5rem;
       font-weight: 700;
-      color: #fff;
-      text-shadow: 0 0 20px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.3);
-      letter-spacing: 0.02em;
-      padding: 0.5rem 1rem;
-      position: relative;
-      display: inline-block;
+      color: #FFFFFF;
     }
-    h1::before,
-    h1::after {
-      content: '✦';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.8);
-      letter-spacing: 0.3em;
-    }
-    h1::before { right: 100%; margin-right: 0.6rem; }
-    h1::after { left: 100%; margin-left: 0.6rem; }
+    .header h1.hide-when-img { position: absolute; width: 1px; height: 1px; clip: rect(0,0,0,0); overflow: hidden; }
     .name-section {
       text-align: center;
       margin-bottom: 2rem;
@@ -77,21 +85,23 @@
       display: block;
       margin-bottom: 0.5rem;
       font-size: 1.1rem;
+      font-family: 'Symbio AR+LT', 'Symbio', 'Noto Naskh Arabic', serif;
+      color: #1f567d;
     }
     .name-section input {
-      font-family: inherit;
+      font-family: 'Symbio AR+LT', 'Symbio', 'Noto Naskh Arabic', serif;
       font-size: 1.25rem;
       padding: 0.75rem 1.25rem;
       border: 2px solid rgba(255,255,255,0.4);
       border-radius: 12px;
       background: rgba(255,255,255,0.12);
-      color: #FFFFFF;
+      color: #1f567d;
       width: 100%;
       max-width: 320px;
       text-align: center;
     }
     .name-section input::placeholder {
-      color: rgba(255,255,255,0.6);
+      color: rgba(31,86,125,0.7);
     }
     .name-section input:focus {
       outline: none;
@@ -132,13 +142,22 @@
     }
     .name-overlay {
       position: absolute;
+      top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
-      font-family: 'Symbio', 'Noto Naskh Arabic', serif;
+      font-family: 'Symbio AR+LT', 'Symbio', 'Noto Naskh Arabic', serif;
       font-weight: 600;
       font-size: 20px;
+      color: #1f567d;
       text-align: center;
       white-space: nowrap;
+      max-width: 85%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       pointer-events: none;
+      line-height: 1.35;
+      padding: 0.15em 0.4em;
+      box-sizing: border-box;
     }
     .download-btn {
       font-family: inherit;
@@ -160,7 +179,7 @@
     }
     .step-choose { max-width: 900px; margin: 0 auto 2rem; }
     .step-choose h2 { display: none; }
-    .design-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .design-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
     @media (max-width: 600px) { .design-choices { grid-template-columns: 1fr; } }
     .design-option {
       background: rgba(255,255,255,0.1);
@@ -182,6 +201,10 @@
     }
     .design-option .thumb-wrap { aspect-ratio: 16/9; background: rgba(0,0,0,0.2); position: relative; }
     .design-option img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .img-failed-msg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); font-size: 0.9rem; text-align: center; padding: 1rem; }
+    .thumb-wrap.img-failed { display: flex; align-items: center; justify-content: center; }
+    .thumb-wrap.img-failed .img-failed-msg { display: block; }
+    .thumb-wrap.img-failed img { visibility: hidden; position: absolute; }
     .design-option .label { display: none; }
     .step-result { max-width: 520px; margin: 0 auto; display: none; }
     .step-result.visible { display: block; }
@@ -203,44 +226,7 @@
     }
     .result-preview .preview-wrap { max-height: 70vh; }
     .result-download { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
-    .name-section label { font-size: 1rem; color: #FFFFFF; }
-    .save-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(0,0,0,0.85);
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
-    .save-modal.visible { display: flex; flex-direction: column; }
-    .save-modal .modal-img {
-      max-width: 100%;
-      max-height: 75vh;
-      object-fit: contain;
-      border-radius: 8px;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    .save-modal .modal-msg {
-      color: #fff;
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .save-modal .modal-close {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      background: #2EA1A1;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      cursor: pointer;
-    }
+    .name-section label { font-size: 1rem; color: #1f567d; }
     .site-footer {
       max-width: 900px;
       margin: 2.5rem auto 0;
@@ -255,7 +241,7 @@
       width: 100%;
       max-width: 584px;
       aspect-ratio: 16/9;
-      background: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.35);
       border-radius: 16px;
       overflow: hidden;
       padding: 0.75rem 1rem;
@@ -273,36 +259,40 @@
   </style>
 </head>
 <body>
-  <audio id="bgAudio" src="ramadan.mp3" loop preload="auto" style="display:none;"></audio>
+  <!-- EAD – ملف صوتي -->
+  <audio id="eadAudio" preload="metadata">
+    <source src="EAD.mp3" type="audio/mpeg">
+  </audio>
   <div id="fileProtocolWarning" style="display:none; background:#c00; color:#fff; text-align:center; padding:14px; margin-bottom:1rem; border-radius:8px;">
-    <strong>لعمل الصور والصوت:</strong> لا تفتح الملف مباشرة. شغّل الخادم ثم افتح الرابط:<br>
-    <code style="background:rgba(0,0,0,0.3); padding:4px 8px; border-radius:4px;">cd "المجلد" && python3 -m http.server 8765</code><br>
-    <a href="http://localhost:8765" style="color:#ff0; font-weight:bold;">افتح: http://localhost:8765</a>
+    <strong>⚠️ الصور لا تعمل لأن الصفحة مفتوحة من القرص (file://)</strong><br>
+    شغّل خادماً محلياً ثم افتح الرابط في المتصفح:<br>
+    <code style="background:rgba(0,0,0,0.3); padding:6px 10px; display:inline-block; margin:8px 0;">cd "المجلد" ثم python3 -m http.server 8080</code><br>
+    ثم افتح: <a href="http://127.0.0.1:8080" style="color:#ff0; font-weight:bold;">http://127.0.0.1:8080</a>
+  </div>
+  <div id="imagesFailedWarning" style="display:none; background:#a00; color:#fff; text-align:center; padding:14px; margin-bottom:1rem; border-radius:8px;">
+    لم تُحمّل الصور. افتح الموقع عبر خادم محلي: <a href="http://127.0.0.1:8080" style="color:#ff0;">http://127.0.0.1:8080</a>
   </div>
   <header class="header">
-    <h1>مبارك عليكم شهر رمضان المبارك</h1>
+    <img src="EAD5.png" alt="رمضان كريم" class="header-title-img" id="headerTitleImg">
+    <h1 class="hide-when-img" id="headerH1">رمضان كريم</h1>
   </header>
 
   <div id="stepChoose" class="step-choose">
     <h2 aria-hidden="true">اختر التصميم</h2>
     <div class="design-choices">
-      <div class="design-option" data-design="1">
+      <div class="design-option" data-design="1" data-src="EAD1.png">
         <div class="thumb-wrap">
-          <img src="1.png" alt="التصميم ١" loading="lazy" decoding="async">
+          <img src="EAD1.png" alt="EAD1 – التصميم الأول" loading="lazy" decoding="async" id="imgEAD1">
+          <span class="img-failed-msg" id="failEAD1">لم تُحمّل الصورة</span>
         </div>
-        <div class="label">التصميم ١</div>
+        <div class="label">EAD1 – التصميم الأول</div>
       </div>
-      <div class="design-option" data-design="2">
+      <div class="design-option" data-design="2" data-src="EAD2.png">
         <div class="thumb-wrap">
-          <img src="2.png" alt="التصميم ٢" loading="lazy" decoding="async">
+          <img src="EAD2.png" alt="EAD2 – التصميم الثاني" loading="lazy" decoding="async" id="imgEAD2">
+          <span class="img-failed-msg" id="failEAD2">لم تُحمّل الصورة</span>
         </div>
-        <div class="label">التصميم ٢</div>
-      </div>
-      <div class="design-option" data-design="3">
-        <div class="thumb-wrap">
-          <img src="3.png" alt="التصميم ٣" loading="lazy" decoding="async">
-        </div>
-        <div class="label">التصميم ٣</div>
+        <div class="label">EAD2 – التصميم الثاني</div>
       </div>
     </div>
   </div>
@@ -322,15 +312,9 @@
     <button type="button" class="download-btn result-download" id="downloadBtn">تحميل الصورة</button>
   </div>
 
-  <div id="saveModal" class="save-modal" aria-hidden="true">
-    <img id="saveModalImg" class="modal-img" alt="الصورة للحفظ">
-    <p class="modal-msg" id="saveModalMsg">اضغط مطولاً على الصورة ثم اختر «حفظ الصورة»<br>أو انقر بالزر الأيمن واختر حفظ الصورة</p>
-    <button type="button" class="modal-close" id="saveModalClose">إغلاق</button>
-  </div>
-
   <footer class="site-footer">
     <div class="logo-wrap">
-      <img src="logo1.png" alt="الشعار" class="site-logo" id="siteLogo">
+      <img src="logo1.png" alt="الشعار" class="site-logo" id="siteLogo" crossorigin="anonymous">
     </div>
   </footer>
 
@@ -339,50 +323,63 @@
       document.getElementById('fileProtocolWarning').style.display = 'block';
     }
 
-    (function initBgAudio() {
-      var bgAudio = document.getElementById('bgAudio');
-      if (!bgAudio) return;
-      bgAudio.volume = 0.25;
-      bgAudio.play().catch(function() {});
-      function tryPlay() {
-        bgAudio.play().catch(function() {});
-        document.removeEventListener('click', tryPlay);
-        document.removeEventListener('touchstart', tryPlay);
+    function checkImageFailed(img, failEl, wrap) {
+      if (img.naturalWidth === 0) {
+        if (failEl) failEl.parentElement.classList.add('img-failed');
+        var w = document.getElementById('imagesFailedWarning');
+        if (w) w.style.display = 'block';
       }
-      document.addEventListener('click', tryPlay, { once: true });
-      document.addEventListener('touchstart', tryPlay, { once: true });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      var i1 = document.getElementById('imgEAD1');
+      var i2 = document.getElementById('imgEAD2');
+      function onErr(img, wrap) {
+        if (wrap) wrap.classList.add('img-failed');
+        var w = document.getElementById('imagesFailedWarning');
+        if (w) w.style.display = 'block';
+      }
+      if (i1) {
+        i1.onerror = function() { onErr(i1, i1.closest('.thumb-wrap')); };
+        i1.onload = function() { i1.closest('.thumb-wrap').classList.remove('img-failed'); };
+      }
+      if (i2) {
+        i2.onerror = function() { onErr(i2, i2.closest('.thumb-wrap')); };
+        i2.onload = function() { i2.closest('.thumb-wrap').classList.remove('img-failed'); };
+      }
+      setTimeout(function() {
+        if (i1 && i1.naturalWidth === 0) onErr(i1, i1.closest('.thumb-wrap'));
+        if (i2 && i2.naturalWidth === 0) onErr(i2, i2.closest('.thumb-wrap'));
+      }, 1500);
+    });
+
+    // EAD – ملف صوتي: يعمل تلقائياً بأول لمسة/نقرة (آيفون وأندرويد)
+    (function() {
+      var audio = document.getElementById('eadAudio');
+      if (!audio) return;
+
+      function startOnFirstInteraction() {
+        if (audio.startedByTouch) return;
+        audio.startedByTouch = true;
+        document.removeEventListener('touchstart', startOnFirstInteraction, { passive: true });
+        document.removeEventListener('click', startOnFirstInteraction);
+        audio.play().catch(function() {});
+      }
+
+      document.addEventListener('touchstart', startOnFirstInteraction, { passive: true });
+      document.addEventListener('click', startOnFirstInteraction);
     })();
 
-    function isSafari() {
+    function isSafariMobile() {
       const ua = navigator.userAgent || '';
-      if (/iPhone|iPad|iPod/.test(ua)) return true;
-      if (/Safari/.test(ua) && !/Chrome|Chromium|FxiOS/.test(ua)) return true;
-      return false;
-    }
-    function showSaveModal(blobUrl) {
-      const modal = document.getElementById('saveModal');
-      const img = document.getElementById('saveModalImg');
-      const closeBtn = document.getElementById('saveModalClose');
-      if (!modal || !img) return;
-      img.src = blobUrl;
-      modal.classList.add('visible');
-      modal.setAttribute('aria-hidden', 'false');
-      closeBtn.onclick = function() {
-        modal.classList.remove('visible');
-        modal.setAttribute('aria-hidden', 'true');
-        img.src = '';
-        URL.revokeObjectURL(blobUrl);
-      };
+      return /iPhone|iPad|iPod/.test(ua) || (navigator.maxTouchPoints > 0 && /Safari/.test(ua) && !/Chrome/.test(ua));
     }
 
     // ——— موضع وحجم ولون الاسم (ثابت) ———
     const NAME_CONFIG = [
-      { top: '79%', left: '50%', fontSize: '20px', color: '#ffffff' },
-      { top: '77%', left: '49%', fontSize: '20px', color: '#ffffff' },
-      { top: '75%', left: '50%', fontSize: '20px', color: '#21567D' }
+      { top: '82%', left: '50%', fontSize: '20px', color: '#1f567d' },
+      { top: '78%', left: '50%', fontSize: '20px', color: '#1f567d' }
     ];
     const LOGO_CONFIG = [
-      { top: '92%', left: '50%', widthPercent: 18 },
       { top: '92%', left: '50%', widthPercent: 18 },
       { top: '92%', left: '50%', widthPercent: 18 }
     ];
@@ -420,10 +417,11 @@
     document.querySelectorAll('.design-option').forEach(opt => {
       opt.addEventListener('click', () => {
         const n = parseInt(opt.getAttribute('data-design'), 10);
+        const src = opt.getAttribute('data-src') || ('EAD' + n + '.png');
         selectedDesign = n;
         document.querySelectorAll('.design-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
-        resultImg.src = n + '.png';
+        resultImg.src = src;
         stepChoose.classList.add('hidden');
         stepResult.classList.add('visible');
         applyResultOverlay();
@@ -486,10 +484,12 @@
 
         const blob = await new Promise(r => c.toBlob(r, 'image/png'));
         const url = URL.createObjectURL(blob);
-        const fileName = 'ramadan-' + selectedDesign + (name ? '-' + name : '') + '.png';
+        const designId = selectedDesign === 1 ? 'EAD1' : 'EAD2';
+        const fileName = 'ramadan-' + designId + (name ? '-' + name : '') + '.png';
 
-        if (isSafari()) {
-          showSaveModal(url);
+        if (isSafariMobile()) {
+          window.open(url, '_blank');
+          alert('افتحت الصورة في نافذة جديدة.\nاضغط مطولاً على الصورة ثم اختر «حفظ الصورة» لحفظها في الجهاز.');
         } else {
           const a = document.createElement('a');
           a.href = url;
