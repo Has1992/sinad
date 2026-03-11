@@ -48,7 +48,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url('EAD4.png');
+      background-image: url('/EAD4.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -200,7 +200,7 @@
       box-shadow: 0 0 0 1px #6CBE99;
     }
     .design-option .thumb-wrap { aspect-ratio: 16/9; background: rgba(0,0,0,0.2); position: relative; }
-    .design-option img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .design-option .thumb-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .img-failed-msg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); font-size: 0.9rem; text-align: center; padding: 1rem; }
     .thumb-wrap.img-failed { display: flex; align-items: center; justify-content: center; }
     .thumb-wrap.img-failed .img-failed-msg { display: block; }
@@ -226,6 +226,15 @@
     }
     .result-preview .preview-wrap { max-height: 70vh; }
     .result-download { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
+    .loading-msg {
+      text-align: center;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.95);
+      font-size: 0.95rem;
+    }
     .save-instructions {
       margin-top: 1.25rem;
       padding: 1rem;
@@ -273,7 +282,7 @@
 <body>
   <!-- EAD – ملف صوتي -->
   <audio id="eadAudio" preload="metadata">
-    <source src="EAD.mp3" type="audio/mpeg">
+    <source src="/EAD.mp3" type="audio/mpeg">
   </audio>
   <div id="fileProtocolWarning" style="display:none; background:#c00; color:#fff; text-align:center; padding:14px; margin-bottom:1rem; border-radius:8px;">
     <strong>⚠️ الصور لا تعمل لأن الصفحة مفتوحة من القرص (file://)</strong><br>
@@ -281,27 +290,25 @@
     <code style="background:rgba(0,0,0,0.3); padding:6px 10px; display:inline-block; margin:8px 0;">cd "المجلد" ثم python3 -m http.server 8080</code><br>
     ثم افتح: <a href="http://127.0.0.1:8080" style="color:#ff0; font-weight:bold;">http://127.0.0.1:8080</a>
   </div>
-  <div id="imagesFailedWarning" style="display:none; background:#a00; color:#fff; text-align:center; padding:14px; margin-bottom:1rem; border-radius:8px;">
-    لم تُحمّل الصور. افتح الموقع عبر خادم محلي: <a href="http://127.0.0.1:8080" style="color:#ff0;">http://127.0.0.1:8080</a>
-  </div>
+  <div id="imagesLoadingMsg" class="loading-msg">جاري التحميل انتظر…</div>
   <header class="header">
-    <img src="EAD5.png" alt="رمضان كريم" class="header-title-img" id="headerTitleImg">
+    <img src="/EAD5.png" alt="رمضان كريم" class="header-title-img" id="headerTitleImg">
     <h1 class="hide-when-img" id="headerH1">رمضان كريم</h1>
   </header>
 
   <div id="stepChoose" class="step-choose">
     <h2 aria-hidden="true">اختر التصميم</h2>
     <div class="design-choices">
-      <div class="design-option" data-design="1" data-src="EAD1.png">
+      <div class="design-option" data-design="1" data-src="/EAD1.png">
         <div class="thumb-wrap">
-          <img src="EAD1.png" alt="EAD1 – التصميم الأول" loading="lazy" decoding="async" id="imgEAD1">
+          <img src="/EAD1.png" alt="EAD1 – التصميم الأول" loading="lazy" decoding="async" id="imgEAD1">
           <span class="img-failed-msg" id="failEAD1">لم تُحمّل الصورة</span>
         </div>
         <div class="label">EAD1 – التصميم الأول</div>
       </div>
-      <div class="design-option" data-design="2" data-src="EAD2.png">
+      <div class="design-option" data-design="2" data-src="/EAD2.png">
         <div class="thumb-wrap">
-          <img src="EAD2.png" alt="EAD2 – التصميم الثاني" loading="lazy" decoding="async" id="imgEAD2">
+          <img src="/EAD2.png" alt="EAD2 – التصميم الثاني" loading="lazy" decoding="async" id="imgEAD2">
           <span class="img-failed-msg" id="failEAD2">لم تُحمّل الصورة</span>
         </div>
         <div class="label">EAD2 – التصميم الثاني</div>
@@ -333,7 +340,7 @@
 
   <footer class="site-footer">
     <div class="logo-wrap">
-      <img src="logo1.png" alt="الشعار" class="site-logo" id="siteLogo" crossorigin="anonymous">
+      <img src="/logo1.png" alt="الشعار" class="site-logo" id="siteLogo" crossorigin="anonymous">
     </div>
   </footer>
 
@@ -342,33 +349,30 @@
       document.getElementById('fileProtocolWarning').style.display = 'block';
     }
 
-    function checkImageFailed(img, failEl, wrap) {
-      if (img.naturalWidth === 0) {
-        if (failEl) failEl.parentElement.classList.add('img-failed');
-        var w = document.getElementById('imagesFailedWarning');
-        if (w) w.style.display = 'block';
-      }
-    }
     document.addEventListener('DOMContentLoaded', function() {
       var i1 = document.getElementById('imgEAD1');
       var i2 = document.getElementById('imgEAD2');
+      var loadingEl = document.getElementById('imagesLoadingMsg');
+      function hideLoading() {
+        if (loadingEl) loadingEl.style.display = 'none';
+      }
+      function onLoad(img, wrap) {
+        if (wrap) wrap.classList.remove('img-failed');
+        if (i1 && i1.naturalWidth > 0 && i2 && i2.naturalWidth > 0) hideLoading();
+      }
       function onErr(img, wrap) {
         if (wrap) wrap.classList.add('img-failed');
-        var w = document.getElementById('imagesFailedWarning');
-        if (w) w.style.display = 'block';
       }
       if (i1) {
         i1.onerror = function() { onErr(i1, i1.closest('.thumb-wrap')); };
-        i1.onload = function() { i1.closest('.thumb-wrap').classList.remove('img-failed'); };
+        i1.onload = function() { onLoad(i1, i1.closest('.thumb-wrap')); };
       }
       if (i2) {
         i2.onerror = function() { onErr(i2, i2.closest('.thumb-wrap')); };
-        i2.onload = function() { i2.closest('.thumb-wrap').classList.remove('img-failed'); };
+        i2.onload = function() { onLoad(i2, i2.closest('.thumb-wrap')); };
       }
-      setTimeout(function() {
-        if (i1 && i1.naturalWidth === 0) onErr(i1, i1.closest('.thumb-wrap'));
-        if (i2 && i2.naturalWidth === 0) onErr(i2, i2.closest('.thumb-wrap'));
-      }, 800);
+      setTimeout(hideLoading, 800);
+      if (i1 && i2 && i1.complete && i2.complete && i1.naturalWidth > 0 && i2.naturalWidth > 0) hideLoading();
     });
 
     // EAD – ملف صوتي: يعمل تلقائياً بأول لمسة/نقرة (آيفون وأندرويد)
@@ -425,7 +429,7 @@
     document.querySelectorAll('.design-option').forEach(opt => {
       opt.addEventListener('click', () => {
         const n = parseInt(opt.getAttribute('data-design'), 10);
-        const src = opt.getAttribute('data-src') || ('EAD' + n + '.png');
+        const src = opt.getAttribute('data-src') || ('/EAD' + n + '.png');
         selectedDesign = n;
         document.querySelectorAll('.design-option').forEach(o => o.classList.remove('selected'));
         opt.classList.add('selected');
