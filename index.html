@@ -43,7 +43,6 @@
       pointer-events: none;
       z-index: 0;
     }
-    /* EAD4 – طبقة خلفية إضافية فقط */
     body::after {
       content: '';
       position: fixed;
@@ -280,8 +279,7 @@
   </style>
 </head>
 <body>
-  <!-- EAD – ملف صوتي -->
-  <audio id="eadAudio" preload="metadata">
+  <audio id="mainAudio" preload="metadata">
     <source src="/EAD.mp3" type="audio/mpeg">
   </audio>
   <div id="fileProtocolWarning" style="display:none; background:#c00; color:#fff; text-align:center; padding:14px; margin-bottom:1rem; border-radius:8px;">
@@ -301,15 +299,15 @@
     <div class="design-choices">
       <div class="design-option" data-design="1" data-src="/EAD1.png">
         <div class="thumb-wrap">
-          <img src="/EAD1.png" alt="EAD1 – التصميم الأول" loading="lazy" decoding="async" id="imgEAD1">
-          <span class="img-failed-msg" id="failEAD1">لم تُحمّل الصورة</span>
+          <img src="/EAD1.png" alt="EAD1 – التصميم الأول" loading="lazy" decoding="async" id="thumbImg1">
+          <span class="img-failed-msg" id="thumbFail1">لم تُحمّل الصورة</span>
         </div>
         <div class="label">EAD1 – التصميم الأول</div>
       </div>
       <div class="design-option" data-design="2" data-src="/EAD2.png">
         <div class="thumb-wrap">
-          <img src="/EAD2.png" alt="EAD2 – التصميم الثاني" loading="lazy" decoding="async" id="imgEAD2">
-          <span class="img-failed-msg" id="failEAD2">لم تُحمّل الصورة</span>
+          <img src="/EAD2.png" alt="EAD2 – التصميم الثاني" loading="lazy" decoding="async" id="thumbImg2">
+          <span class="img-failed-msg" id="thumbFail2">لم تُحمّل الصورة</span>
         </div>
         <div class="label">EAD2 – التصميم الثاني</div>
       </div>
@@ -350,34 +348,33 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      var i1 = document.getElementById('imgEAD1');
-      var i2 = document.getElementById('imgEAD2');
+      var thumb1 = document.getElementById('thumbImg1');
+      var thumb2 = document.getElementById('thumbImg2');
       var loadingEl = document.getElementById('imagesLoadingMsg');
       function hideLoading() {
         if (loadingEl) loadingEl.style.display = 'none';
       }
-      function onLoad(img, wrap) {
+      function onThumbLoad(img, wrap) {
         if (wrap) wrap.classList.remove('img-failed');
-        if (i1 && i1.naturalWidth > 0 && i2 && i2.naturalWidth > 0) hideLoading();
+        if (thumb1 && thumb1.naturalWidth > 0 && thumb2 && thumb2.naturalWidth > 0) hideLoading();
       }
-      function onErr(img, wrap) {
+      function onThumbError(img, wrap) {
         if (wrap) wrap.classList.add('img-failed');
       }
-      if (i1) {
-        i1.onerror = function() { onErr(i1, i1.closest('.thumb-wrap')); };
-        i1.onload = function() { onLoad(i1, i1.closest('.thumb-wrap')); };
+      if (thumb1) {
+        thumb1.onerror = function() { onThumbError(thumb1, thumb1.closest('.thumb-wrap')); };
+        thumb1.onload = function() { onThumbLoad(thumb1, thumb1.closest('.thumb-wrap')); };
       }
-      if (i2) {
-        i2.onerror = function() { onErr(i2, i2.closest('.thumb-wrap')); };
-        i2.onload = function() { onLoad(i2, i2.closest('.thumb-wrap')); };
+      if (thumb2) {
+        thumb2.onerror = function() { onThumbError(thumb2, thumb2.closest('.thumb-wrap')); };
+        thumb2.onload = function() { onThumbLoad(thumb2, thumb2.closest('.thumb-wrap')); };
       }
       setTimeout(hideLoading, 800);
-      if (i1 && i2 && i1.complete && i2.complete && i1.naturalWidth > 0 && i2.naturalWidth > 0) hideLoading();
+      if (thumb1 && thumb2 && thumb1.complete && thumb2.complete && thumb1.naturalWidth > 0 && thumb2.naturalWidth > 0) hideLoading();
     });
 
-    // EAD – ملف صوتي: يعمل تلقائياً بأول لمسة/نقرة (آيفون وأندرويد)
     (function() {
-      var audio = document.getElementById('eadAudio');
+      var audio = document.getElementById('mainAudio');
       if (!audio) return;
 
       function startOnFirstInteraction() {
@@ -397,7 +394,6 @@
       return /iPhone|iPad|iPod/.test(ua) || (navigator.maxTouchPoints > 0 && /Safari/.test(ua) && !/Chrome/.test(ua));
     }
 
-    // ——— موضع وحجم ولون الاسم (ثابت) ———
     const NAME_CONFIG = [
       { top: '82%', left: '50%', fontSize: '20px', color: '#1f567d' },
       { top: '78%', left: '50%', fontSize: '20px', color: '#1f567d' }
@@ -418,21 +414,21 @@
 
     function applyResultOverlay() {
       if (selectedDesign < 1) return;
-      const c = NAME_CONFIG[selectedDesign - 1];
+      const nameStyle = NAME_CONFIG[selectedDesign - 1];
       resultOverlay.textContent = userNameInput.value.trim();
-      resultOverlay.style.top = c.top;
-      resultOverlay.style.left = c.left;
-      resultOverlay.style.fontSize = c.fontSize;
-      resultOverlay.style.color = c.color;
+      resultOverlay.style.top = nameStyle.top;
+      resultOverlay.style.left = nameStyle.left;
+      resultOverlay.style.fontSize = nameStyle.fontSize;
+      resultOverlay.style.color = nameStyle.color;
     }
 
-    document.querySelectorAll('.design-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const n = parseInt(opt.getAttribute('data-design'), 10);
-        const src = opt.getAttribute('data-src') || ('/EAD' + n + '.png');
-        selectedDesign = n;
-        document.querySelectorAll('.design-option').forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
+    document.querySelectorAll('.design-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const designNum = parseInt(option.getAttribute('data-design'), 10);
+        const src = option.getAttribute('data-src') || ('/EAD' + designNum + '.png');
+        selectedDesign = designNum;
+        document.querySelectorAll('.design-option').forEach(other => other.classList.remove('selected'));
+        option.classList.add('selected');
         resultImg.src = src;
         stepChoose.classList.add('hidden');
         stepResult.classList.add('visible');
@@ -445,21 +441,21 @@
       e.preventDefault();
       stepChoose.classList.remove('hidden');
       stepResult.classList.remove('visible');
-      document.querySelectorAll('.design-option').forEach(o => o.classList.remove('selected'));
+      document.querySelectorAll('.design-option').forEach(other => other.classList.remove('selected'));
       selectedDesign = 0;
     });
 
     userNameInput.addEventListener('input', applyResultOverlay);
     userNameInput.addEventListener('change', applyResultOverlay);
 
-    function getFontSizePx(el) {
-      return parseFloat(getComputedStyle(el).fontSize) || 20;
+    function getFontSizePx(element) {
+      return parseFloat(getComputedStyle(element).fontSize) || 20;
     }
 
     downloadBtn.addEventListener('click', async () => {
       if (selectedDesign < 1) return;
       const index = selectedDesign - 1;
-      const wrap = resultImg.closest('.preview-wrap');
+      const previewWrap = resultImg.closest('.preview-wrap');
       const name = userNameInput.value.trim();
 
       if (!resultImg.complete || resultImg.naturalWidth === 0) {
@@ -471,40 +467,40 @@
       downloadBtn.textContent = 'جاري التحميل…';
 
       try {
-        const config = NAME_CONFIG[index];
+        const nameStyle = NAME_CONFIG[index];
         const isMobile = window.innerWidth < 768;
         const scale = isMobile ? 1.25 : 2;
-        const c = document.createElement('canvas');
-        c.width = resultImg.naturalWidth * scale;
-        c.height = resultImg.naturalHeight * scale;
-        const ctx = c.getContext('2d');
+        const canvas = document.createElement('canvas');
+        canvas.width = resultImg.naturalWidth * scale;
+        canvas.height = resultImg.naturalHeight * scale;
+        const ctx = canvas.getContext('2d');
         ctx.scale(scale, scale);
         ctx.drawImage(resultImg, 0, 0, resultImg.naturalWidth, resultImg.naturalHeight);
 
         if (name) {
-          const topPct = parseFloat(config.top) / 100;
-          const leftPct = parseFloat(config.left) / 100;
+          const topPct = parseFloat(nameStyle.top) / 100;
+          const leftPct = parseFloat(nameStyle.left) / 100;
           const x = resultImg.naturalWidth * leftPct;
           const y = resultImg.naturalHeight * topPct;
-          const fontSize = Math.round((resultImg.naturalWidth / wrap.offsetWidth) * getFontSizePx(resultOverlay));
+          const fontSize = Math.round((resultImg.naturalWidth / previewWrap.offsetWidth) * getFontSizePx(resultOverlay));
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.font = '600 ' + fontSize + 'px "Symbio", "Noto Naskh Arabic", serif';
-          ctx.fillStyle = config.color || '#ffffff';
+          ctx.fillStyle = nameStyle.color || '#ffffff';
           ctx.fillText(name, x, y);
         }
 
-        const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
         const url = URL.createObjectURL(blob);
         const designId = selectedDesign === 1 ? 'EAD1' : 'EAD2';
         const fileName = 'ramadan-' + designId + (name ? '-' + name : '') + '.png';
 
         if (isSafariMobile()) {
-          const win = window.open('', '_blank');
-          if (win && win.document) {
+          const popup = window.open('', '_blank');
+          if (popup && popup.document) {
             const escapedUrl = url.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
             const escapedName = (name || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            win.document.write(
+            popup.document.write(
               '<!DOCTYPE html>' +
               '<html lang="ar" dir="rtl">' +
               '<head>' +
@@ -529,16 +525,15 @@
               '</div>' +
               '</body></html>'
             );
-            win.document.close();
+            popup.document.close();
           } else {
-            // fallback
             window.open(url, '_blank');
           }
         } else {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = fileName;
-          a.click();
+          const downloadLink = document.createElement('a');
+          downloadLink.href = url;
+          downloadLink.download = fileName;
+          downloadLink.click();
           URL.revokeObjectURL(url);
         }
       } catch (e) {
