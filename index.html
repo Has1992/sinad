@@ -224,7 +224,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 16/9;
-      background: #111;
+      background: #ffffff;
       overflow: hidden;
     }
     .preview-wrap img {
@@ -272,9 +272,9 @@
     }
     .step-choose {
       max-width: 900px;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.5rem;
       position: relative;
-      padding: 2rem 1rem;
+      padding: 1.5rem 1rem;
       border-radius: 20px;
       overflow: hidden;
     }
@@ -295,7 +295,7 @@
     }
     .step-choose > * { position: relative; z-index: 1; }
     .step-choose h2 { display: none; }
-    .design-choices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .design-choices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
     @media (max-width: 768px) { .design-choices { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 480px) { .design-choices { grid-template-columns: 1fr; } }
     .design-option {
@@ -318,14 +318,14 @@
       background: rgba(46,161,161,0.08);
       box-shadow: 0 0 0 1px #2EA1A1;
     }
-    .design-option .thumb-wrap { aspect-ratio: 16/9; background: rgba(0,0,0,0.2); position: relative; }
-    .design-option .thumb-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .design-option .thumb-wrap { position: relative; background: transparent; }
+    .design-option .thumb-wrap img { width: 100%; height: auto; object-fit: contain; display: block; }
     .img-failed-msg { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; color: rgba(26,58,74,0.6); font-size: 0.9rem; text-align: center; padding: 1rem; }
     .thumb-wrap.img-failed { display: flex; align-items: center; justify-content: center; }
     .thumb-wrap.img-failed .img-failed-msg { display: block; }
     .thumb-wrap.img-failed img { visibility: hidden; position: absolute; }
     .design-option .label { display: none; }
-    .step-result { max-width: 520px; margin: 0 auto; display: none; }
+    .step-result { max-width: 520px; margin: 0.5rem auto 0; display: none; }
     .step-result.visible { display: block; }
     .step-choose.hidden { display: none; }
     .back-link {
@@ -340,11 +340,11 @@
       border-radius: 16px;
       overflow: hidden;
       background: #f0f4f6;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 0.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
-    .result-preview .preview-wrap { max-height: 70vh; }
-    .result-download { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
+    .result-preview .preview-wrap { max-height: 64vh; }
+    .result-download { width: 100%; padding: 0.85rem 1rem; font-size: 1.05rem; margin-top: 0.35rem; }
     .loading-msg {
       text-align: center;
       padding: 0.75rem 1rem;
@@ -355,8 +355,8 @@
       font-size: 0.95rem;
     }
     .save-instructions {
-      margin-top: 1.25rem;
-      padding: 1rem;
+      margin-top: 0.9rem;
+      padding: 0.9rem;
       background: #f0f4f6;
       border-radius: 12px;
       font-size: 0.9rem;
